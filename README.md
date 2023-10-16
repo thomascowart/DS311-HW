@@ -1,2 +1,2 @@
-# Python-HW
-Python related HW from my DS311 class.
+# DS311-HW
+HW for my DS311 class.
