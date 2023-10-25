@@ -1,2 +1,2 @@
 # DS311-HW
-HW for my DS311 class.
+Homework for my DS311 class.
