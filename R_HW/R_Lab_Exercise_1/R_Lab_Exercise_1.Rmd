@@ -1,6 +1,6 @@
 ---
 title: "DS311 - Basic R Lab Exercise"
-author: "Replace with Your Name"
+author: "Thomas Cowart"
 date: "1/10/2023"
 output:
   pdf_document: default
