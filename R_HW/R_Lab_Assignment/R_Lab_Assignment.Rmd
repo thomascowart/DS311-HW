@@ -1,0 +1,221 @@
+---
+title: "DS311 - R Lab Assignment"
+author: "Thomas Cowart"
+date: "`r Sys.Date()`"
+output:
+  pdf_document: default
+  html_document:
+    theme: united
+    highlight: tango
+    df_print: paged
+---
+
+```{r setup, include=FALSE}
+# Set the CRAN mirror to use for package installations
+options(repos = "https://cran.rstudio.com/")
+
+# Install the ggplot2 package
+install.packages("ggplot2")
+
+# Load the ggplot2 package
+library(ggplot2)
+
+```
+
+## R Assignment 1
+
+* In this assignment, we are going to apply some of the build in data set in R for descriptive statistics analysis.
+* To earn full grade in this assignment, students need to complete the coding tasks for each question to get the result.
+* After finished all the questions, knit the document into HTML format for submission.
+
+### Question 1
+
+Using the **mtcars** data set in R, please answer the following questions.
+
+```{r}
+# Loading the data
+data(mtcars)
+
+# Head of the data set
+head(mtcars)
+```
+
+a. Report the number of variables and observations in the data set.
+
+```{r}
+# Enter your code here!
+num_variables <- ncol(mtcars)
+num_observations <- nrow(mtcars)
+# Answer:
+print("There are total of 11 variables and 32 observations in this data set.")
+```
+
+
+
+b. Print the summary statistics of the data set and report how many discrete and continuous variables are in the data set.
+
+```{r}
+# Enter your code here!
+summary(mtcars)
+str(mtcars)
+# Answer:
+print("There are 7 discrete variables and 4 continuous variables in this data set.")
+```
+
+
+
+c. Calculate the mean, variance, and standard deviation for the variable **mpg** and assign them into variable names m, v, and s. Report the results in the print statement.
+
+```{r}
+# Enter your code here!
+m <- mean(mtcars$mpg)
+v <- var(mtcars$mpg)
+s <- sd(mtcars$mpg)
+
+# print(paste("The average of Miles Per Gallon from this data set is '20.09', with variance '36.32', and standard deviation '6.02'."))
+```
+
+
+
+d. Create two tables to summarize 1) average mpg for each cylinder class and 2) the standard deviation of mpg for each gear class.
+
+```{r}
+# Enter your code here!
+mean_mpg_by_cyl <- aggregate(mpg ~ cyl, mtcars, mean)
+sd_mpg_by_gear <- aggregate(mpg ~ gear, mtcars, sd)
+
+print(mean_mpg_by_cyl)
+print(sd_mpg_by_gear)
+```
+
+
+
+e. Create a crosstab that shows the number of observations belong to each cylinder and gear class combinations. The table should show how many observations given the car has 4 cylinders with 3 gears, 4 cylinders with 4 gears, etc. Report which combination is recorded in this data set and how many observations for this type of car.
+
+```{r}
+# Enter your code here!
+cyl_gear_crosstable <- table(mtcars$cyl, mtcars$gear)
+print(cyl_gear_crosstable)
+
+print("The most common car type in this data set is car with 8 cylinders and 3 gears. There are total of 12 cars belong to this specification in the data set.")
+```
+
+
+*** 
+
+### Question 2
+
+Use different visualization tools to summarize the data sets in this question.
+
+a. Using the **PlantGrowth** data set, visualize and compare the weight of the plant in the three separated group. Give labels to the title, x-axis, and y-axis on the graph. Write a paragraph to summarize your findings.
+
+```{r}
+# Load the data set
+data("PlantGrowth")
+
+# Head of the data set
+head(PlantGrowth)
+
+# Enter your code here!
+install.packages("ggplot2")
+library(ggplot2)
+ggplot(PlantGrowth, aes(x = group, y = weight)) + 
+    geom_boxplot() +
+    labs(title = "Comparison of Plant Weights",
+         x = "Group",
+         y = "Weight") +
+    theme_minimal()
+```
+
+Result:
+
+=> Report a paragraph to summarize your findings from the plot!
+
+The control group's median weight is just above 5.0, without outliers. Treatment 1 has a similar median weight but includes two significant outliers, indicating some plants had much higher weights. Treatment 2 shows a higher median weight near 5.3 and a wider range, suggesting this treatment may increase plant weight more consistently. Overall, Treatment 2 appears to have the most positive impact on plant weight.
+
+
+b. Using the **mtcars** data set, plot the histogram for the column **mpg** with 10 breaks. Give labels to the title, x-axis, and y-axis on the graph. Report the most observed mpg class from the data set.
+
+```{r}
+hist(mtcars$mpg, breaks = 10, main = "Histogram of MPG", xlab = "Miles Per Gallon (MPG)", ylab = "Frequency")
+
+
+print("Most of the cars in this data set are in the class of 15 miles per gallon.")
+```
+
+
+
+c. Using the **USArrests** data set, create a pairs plot to display the correlations between the variables in the data set. Plot the scatter plot with **Murder** and **Assault**. Give labels to the title, x-axis, and y-axis on the graph. Write a paragraph to summarize your results from both plots.
+
+```{r}
+# Load the data set
+data("USArrests")
+
+# Head of the data set
+head(USArrests)
+
+# Enter your code here!
+pairs(USArrests, main = "Pairs Plot of USArrests Data")
+plot(USArrests$Murder, USArrests$Assault, main = "Scatter Plot of Murder vs Assault",
+     xlab = "Murder Rate", ylab = "Assault Rate")
+```
+
+Result:
+
+=> Report a paragraph to summarize your findings from the plot!
+
+The scatter plot shows a positive correlation between the two variables; as the Murder Rate increases, the Assault Rate tends to increase as well. The distribution of points suggests a linear relationship, with most data points clustered in the lower left of the plot, indicating that most observations have lower rates of both murders and assaults. There are a few states with higher rates of murder and assault, but these are less common. The plot does not indicate any outliers with extremely high or low rates when compared to the overall trend.
+
+***
+
+### Question 3
+
+Download the housing data set from www.jaredlander.com and find out what explains the housing prices in New York City.
+
+Note: Check your working directory to make sure that you can download the data into the data folder. 
+
+```{r, echo=FALSE}
+# Load and clean the housing data set 
+download.file(url='https://www.jaredlander.com/data/housing.csv',
+              destfile='data/housing.csv', mode='wb')
+housingData <- read.csv('data/housing.csv')
+housingData <- subset(housingData, 
+                      select = c("Neighborhood", "Market.Value.per.SqFt", "Boro", "Year.Built"))
+housingData <- na.omit(housingData)                   
+```
+
+a. Create your own descriptive statistics and aggregation tables to summarize the data set and find any meaningful results between different variables in the data set.
+
+```{r}
+# Head of the cleaned data set
+head(housingData)
+
+# Enter your code here!
+summary(housingData)
+agg1 <- aggregate(Market.Value.per.SqFt ~ Year.Built, data = housingData, mean)
+```
+
+b. Create multiple plots to demonstrates the correlations between different variables. Remember to label all axes and give title to each graph.
+
+```{r}
+# Enter your code here!
+plot(agg1$Year.Built, agg1$Market.Value.per.SqFt, 
+     main = "Average Market Value per Square Foot by Year",
+     xlab = "Year Built", ylab = "Average Market Value per Square Foot", pch = 19)
+boxplot(housingData$Market.Value.per.SqFt ~ housingData$Boro, 
+        main = "Box Plot of Market Value per SqFt by Borough",
+        xlab = "Borough", 
+        ylab = "Market Value per SqFt")
+```
+
+c. Write a summary about your findings from this exercise.
+
+=> Enter your answer here!
+
+1) The Scatter Plot
+
+The scatter plot shows the average market value per square foot for properties built between 1850 and 2000. There is a wide variation in values, with a cluster of higher values around 1900 and a plateau from 1925 to 1975. Post-1975, values slightly decrease or stabilize. The data suggests that construction year is not a strong predictor of market value per square foot, given the high variability across the years.
+
+2) The Box Plots
+
+The box plots show that Manhattan has the highest median market value per square foot, followed by Brooklyn, Queens, and the Bronx. Manhattan also has the widest spread of values, indicating significant variability in property values. The Bronx has the lowest median value and less variability. There are outliers present in all boroughs, suggesting the presence of properties valued significantly different from the median.
