@@ -1,2 +1,2 @@
-# DS311-HW
-Homework submissions for my DS311 class.
+# DS311 Homework
+Homework submissions for my "Technologies in Data Analytics" university course.
